@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
  * @UniqueEntity(fields={"pseudo"},message="ce pseudo existe deja")
+ * @UniqueEntity(fields={"mail"},message="ce mail existe deja")
  */
 
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
@@ -29,16 +30,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $mail;
 
-    /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
 
-    /**
-     * @var string The hashed password
-     * @ORM\Column(type="string")
-     */
-    private $password;
 
     /**
      * @ORM\Column(type="string", length=50)
@@ -137,34 +129,19 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return $this->administrateur ?['ROLE_ADMIN']:['ROLE_USER'];
     }
 
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
 
-        return $this;
-    }
 
     /**
      * @see PasswordAuthenticatedUserInterface
      */
     public function getPassword(): string
     {
-        return $this->password;
+        return $this->motPasse;
     }
 
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
 
     /**
      * Returning a salt is only needed, if you are not using a modern
