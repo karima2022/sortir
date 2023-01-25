@@ -6,17 +6,12 @@ use App\Entity\Campus;
 use App\Entity\Participant;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TelType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ParticipantType extends AbstractType
 {
@@ -24,11 +19,11 @@ class ParticipantType extends AbstractType
     {
         $builder
 
-            ->add('nom' , TextType::class)
-            ->add('prenom', TextType::class)
-            ->add('mail' ,EmailType::class)
-            ->add('telephone' , TelType::class)
-            ->add('pseudo' , TextType::class)
+            ->add('nom' )
+            ->add('prenom')
+            ->add('mail' )
+            ->add('telephone' )
+            ->add('pseudo' )
             ->add('campus', EntityType::class,[
                 'class' => Campus::class,
                 'choice_label' => 'nom'
@@ -50,19 +45,7 @@ class ParticipantType extends AbstractType
                     'second_options' => ['label' => 'Confirmation']
 
 
-            ])
-            ->add('Enregistrer' , SubmitType::class,
-            [
-                'attr' => ['class' => 'btn btn-primary']
-            ])
-            ->add('Annuler' , ResetType::class,
-            [
-                'attr' => ['class' => 'btn btn-danger']
             ]);
-
-
-
-
 
     }
 

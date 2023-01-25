@@ -28,3 +28,37 @@ table{
 dropdown{
 
 }
+label {
+    display: block;
+    font-size: 20px;
+    text-align: left;
+    margin-left: 150px;
+    margin-bottom: 10px;
+}
+#monProfile
+{
+    text-align: center;
+    font-size: 50px;
+}
+input,
+textarea{
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+    width: 500px;
+    height: 30px;
+    border-radius: 5px;
+    max-width: 50%;
+    border-color: darkkhaki;
+}
+.profileDiv
+{
+    text-align: center;
+   background-color: blueviolet;
+   border: 10px  white;
+    margin-left: 350px;
+    margin-right: 350px;
+    border-radius: 20px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+

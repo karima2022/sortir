@@ -1,4 +1,4 @@
-{% extends '../base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}
 Profile
@@ -6,12 +6,13 @@ Profile
 
 {% block body %}
 
-    <h1>Mon Profile</h1>
+    <h1 id="monProfile">Mon Profile</h1>
     <br>
-    {{ form_start(participantForm) }}
-
-    {{ form_widget(participantForm) }}
-
-
-    {{ form_end(participantForm) }}
+  <div class="profileDiv">
+     {{ form_start(participantForm) }}
+      {{ form_widget(participantForm) }}
+      <button type="submit" class="btn btn-primary btn-lg">Enregistrer</button>
+      <button type="reset" class="btn btn-secondary btn-lg">Annuler</button>
+      {{ form_end(participantForm) }}
+  </div>
 {% endblock %}
