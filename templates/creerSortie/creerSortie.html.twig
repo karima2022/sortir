@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} CreerSortie! | {{ parent () }}{% endblock %}
+
+{% block body %}
+
+    <div>
+        {{ form_start(sortieForm) }}
+
+        {{ form_widget(sortieForm) }}
+
+         <button type="submit" name ="enregistrer" >Enregistrer</button>
+        <button type="submit" name="publier">Publier la sortie</button>
+
+{#        <input type="submit"name="button" value="Save" label="Enregistrer">
+            <input type="submit"name="button" value="publier" label="Publier">#}
+        <button type="reset">Annuler</button>
+
+        {{ form_end(sortieForm) }}
+    </div>
+
+
+{% endblock %}
