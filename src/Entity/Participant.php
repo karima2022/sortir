@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
@@ -27,6 +28,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\Email(message="veuillez saisir votre email")
      */
     private $mail;
 
@@ -34,11 +36,13 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank(message="Veuillez saisir votre nom")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank(message="Veuillez saisir votre prénom")
      */
     private $prenom;
 
@@ -49,13 +53,19 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=50,unique=true)
+     * @Assert\NotBlank(message="Veuillez saisir un pseudo")
      */
     private $pseudo;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Veuillez saisir un mot de passe")
      */
     private $motPasse;
+    /**
+     * @var string le mot de passe en clair pour gestion formulaire
+     */
+    private $plainMotPasse;
 
     /**
      * @ORM\Column(type="boolean")
@@ -222,6 +232,17 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    public function getPlainMotPasse(): ?string
+    {
+        return $this->motPasse;
+    }
+
+    public function setPlainMotPasse(string $motPasse): self
+    {
+        $this->plainMotPasse = $motPasse;
+
+        return $this;
+    }
 
     public function isAdministrateur(): ?bool
     {
@@ -309,7 +330,6 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
                 $sortiesCreee->setOrganisateur(null);
             }
         }
-
         return $this;
     }
 }
