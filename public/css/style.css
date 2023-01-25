@@ -1,0 +1,30 @@
+body{
+    background-color: black;
+    color: white;
+}
+nav ul {
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+}
+
+nav li {
+    margin-right: 1rem;
+}
+.logo img{
+height: 200px;
+}
+
+.entete{
+   display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+table{
+    text-align: center;
+}
+
+dropdown{
+
+}

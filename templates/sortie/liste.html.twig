@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="filtres">
+<h2> Filtrer les sorties </h2>
+    <div class="dropdown">
+
+           <div class="dropdown">
+               Campus
+               <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                   {{ app.user.campus.nom }}
+               </a>
+
+               <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                   {% for campus in campuss %}
+                   <li><a class="dropdown-item" href="#">{{ campus.nom }}</a></li>
+                  {% endfor %}
+               </ul>
+           </div>
+    </div>
+</div>
+
+
+       <table class="table table-dark table-striped">
+           <tr>
+               <td> Nom de la sortie </td>
+               <td> Date de la sortie </td>
+               <td> Clôture </td>
+               <td> Inscrits/Places </td>
+               <td> Etat </td>
+               <td> Inscrit </td>
+               <td> Organisateur </td>
+               <td> Actions </td>
+           </tr>
+    {%for sortie in sorties%}
+            <tr>
+                <td> {{ sortie.nom }} </td>
+                <td> {{ sortie.dateHeureDebut|date ('Y-m-d')}} </td>
+                <td> {{ sortie.dateLimiteInscription|date ('Y-m-d')}} </td>
+                <td> {{ sortie.nbInscriptionsMax }}  </td>
+                <td> {{ sortie.etat.libelle}} </td>
+                <td> X </td>
+                <td> {{ sortie.organisateur.nom }} </td>
+                {% if sortie.organisateur.nom == app.user.nom %}
+                <td><a href=" #" title="Modifier">Modifier</a> -<a href=" #" title="Publier">Publier</a></td>
+                {% else %}
+                    <td><a href=" #"title="Afficher">Afficher</a> - <a href=" #" title="Se désister">Se Désister</a></td>
+                    {% endif %}
+            </tr>
+    {%endfor%}
+       </table>
+
+
+
+
+
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

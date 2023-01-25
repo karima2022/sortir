@@ -3,8 +3,17 @@
 namespace App\Repository;
 
 use App\Entity\Sortie;
+use Couchbase\UserManager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use http\Client\Curl\User;
+use http\Env\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 
 /**
  * @extends ServiceEntityRepository<Sortie>
@@ -36,25 +45,29 @@ class SortieRepository extends ServiceEntityRepository
 
         if ($flush) {
             $this->getEntityManager()->flush();
-        }
+        }}
+    public function searchByCampus(ParticipantRepository $participantRepository) {
+
+$campus=$participantRepository->getCampus();
+        $queryBuilder = $this->createQueryBuilder('s');
+        $queryBuilder->Where('s.campus'== $campus);
+
+        $query = $queryBuilder->getQuery();
+
+
+       // $paginator=new Paginator($query);
+
+       $results = $query->getResult();
+        return $results;
+
+
+
+
     }
 
-//    /**
-//     * @return Sortie[] Returns an array of Sortie objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
-//    public function findOneBySomeField($value): ?Sortie
+
+//    public function findOneBySomeField($campus): ?Sortie
 //    {
 //        return $this->createQueryBuilder('s')
 //            ->andWhere('s.exampleField = :val')
