@@ -6,6 +6,7 @@ use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Repository\CampusRepository;
 use App\Repository\ParticipantRepository;
+use App\Repository\SerieRepository;
 use App\Repository\SortieRepository;
 use ContainerSejy5we\getCampusRepositoryService;
 use Couchbase\UserManager;
@@ -44,4 +45,23 @@ $user=$this->getUser();
 
 
     }
+
+    /**
+     * @Route ("/sortie/details/{id}", name="sortie_details")
+     */
+
+    public function details(int $id, SortieRepository$sortieRepository):Response
+    {
+        $sortie=$sortieRepository->find($id);
+        if (!$sortie){
+            throw $this->createNotFoundException('Erreur');
+        }
+
+
+        return $this->render('sortie/details.html.twig', [
+            "sortie"=>$sortie
+        ]);
+        dump($sortie);
+    }
+
 }

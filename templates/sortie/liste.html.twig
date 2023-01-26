@@ -2,26 +2,40 @@
 
 {% block body %}
 <div class="filtres">
-<h2> Filtrer les sorties </h2>
-    <div class="dropdown">
 
-           <div class="dropdown">
-               Campus
-               <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                   {{ app.user.campus.nom }}
-               </a>
 
-               <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                   {% for campus in campuss %}
-                   <li><a class="dropdown-item" href="#">{{ campus.nom }}</a></li>
-                  {% endfor %}
-               </ul>
-           </div>
+    <div>
+        <div class="row g-3 align-items-center">
+            <div class="col-auto">
+        <label> Campus <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{ app.user.campus.nom }}</a>
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                {% for campus in campuss %}
+                 <li><a class="dropdown-item">{{ campus.nom }} </a></li>
+                {% endfor %}
+            </ul>
+        </label>
+
+        <label>Le nom de la sortie contient :<input name="search" autocomplete="name"></label>
+        <label>Entre <input type="date" > et <input type="date"></label>
     </div>
+            <div class="col-auto">
+        <fieldset>
+            <label ><input type="checkbox" name="organisateur">Sorties dont je suis l'organisateur</label>
+            <label ><input type="checkbox" name="inscrit">Sorties auxquelles je suis inscrit/e</label>
+            <label ><input type="checkbox" name="pas inscrit">Sorties auxquelles je ne suis pas inscrit/e</label>
+            <label ><input type="checkbox" name="passées">Sorties passées</label>
+        </fieldset>
+        <label><input type="submit" value="Rechercher"></label>
+
+            </div>
+    </form>
+
+
 </div>
 
-
        <table class="table table-dark table-striped">
+           <br>
            <tr>
                <td> Nom de la sortie </td>
                <td> Date de la sortie </td>
@@ -44,7 +58,7 @@
                 {% if sortie.organisateur.nom == app.user.nom %}
                 <td><a href=" #" title="Modifier">Modifier</a> -<a href=" #" title="Publier">Publier</a></td>
                 {% else %}
-                    <td><a href=" #"title="Afficher">Afficher</a> - <a href=" #" title="Se désister">Se Désister</a></td>
+                    <td><a href="{{ path('sortie_details',{'id':sortie.id}) }}"title="Afficher">Afficher</a> - <a href=" #" title="Se désister">Se Désister</a></td>
                     {% endif %}
             </tr>
     {%endfor%}

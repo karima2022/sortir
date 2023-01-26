@@ -25,9 +25,7 @@ table{
     text-align: center;
 }
 
-dropdown{
 
-}
 label {
     display: block;
     font-size: 20px;
@@ -40,7 +38,7 @@ label {
     text-align: center;
     font-size: 50px;
 }
-input,
+.profileDiv  input,
 textarea{
     margin-bottom: 1rem;
     box-sizing: border-box;
@@ -62,3 +60,21 @@ textarea{
     padding-top: 20px;
 }
 
+.sortie-details{
+
+   display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    background-color: blueviolet;
+    border: 10px  white;
+    margin-left: 350px;
+    margin-right: 350px;
+    border-radius: 20px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+
+}
+
+.filtres form{
+    font-size: smaller;

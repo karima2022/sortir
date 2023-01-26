@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block body %}
+
+
+
+    <div class="sortie-details">
+
+<article>
+
+ <div class="row g-3 align-items-center">
+        <div class="col-auto">
+            <div> Nom de la sortie: {{ sortie.nom }}</div>
+        <div> Date et heure de sortie : {{ sortie.dateHeureDebut | date("Y-m-d") }}</div>
+        <div>Date limite d'inscription : {{ sortie.dateLimiteInscription | date("Y-m-d")}} </div>
+        <div>Nombre de places : {{ sortie.nbInscriptionsMax}} </div>
+        <div> Durée {{ sortie.duree }} minutes </div>
+        <div>Description et infos : {{ sortie.infosSortie }}</div>
+        </div>
+        <div class="col-auto">
+            <div>Campus : {{ sortie.campus.nom }}</div>
+        <div>Lieu : {{ sortie.lieu.nom }}</div>
+        <div>Rue : {{ sortie.lieu.rue }}</div>
+        <div> Code Postal: {{ sortie.lieu.ville.codePostal }}</div>
+        <div>Latitude : {{ sortie.lieu.latitude }}</div>
+        <div>Longitude : {{ sortie.lieu.longitude}}</div>
+        </div>
+</article>
+    </div>
+{% endblock %}
+
