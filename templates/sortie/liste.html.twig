@@ -30,7 +30,7 @@
 
             </div>
     </form>
-
+        </div>
 
 </div>
 
@@ -53,7 +53,11 @@
                 <td> {{ sortie.dateLimiteInscription|date ('Y-m-d')}} </td>
                 <td> {{ sortie.nbInscriptionsMax }}  </td>
                 <td> {{ sortie.etat.libelle}} </td>
-                <td> X </td>
+                <td> {% for participant in sortie.participants %}
+                        {% if(app.user.pseudo == participant.pseudo) %}
+                            X
+                        {% endif %}
+                    {% endfor %} </td>
                 <td> {{ sortie.organisateur.nom }} </td>
                 {% if sortie.organisateur.nom == app.user.nom %}
                 <td><a href=" #" title="Modifier">Modifier</a> -<a href=" #" title="Publier">Publier</a></td>
