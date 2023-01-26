@@ -12,7 +12,7 @@ Profile
      {{ form_start(participantForm) }}
       {{ form_widget(participantForm) }}
       <button type="submit" class="btn btn-primary btn-lg">Enregistrer</button>
-      <button type="reset" class="btn btn-secondary btn-lg">Annuler</button>
+      <button type="reset" class="btn btn-primary btn-lg" ><a class="btn btn-primary " href="{{ path('sortie_liste') }}">Annuler</a></button>
       {{ form_end(participantForm) }}
   </div>
 {% endblock %}

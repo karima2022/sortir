@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    profil d'organisateur
+{% endblock %}
+
+{% block body %}
+
+
+
+
+    <div class="profileDiv">
+        <div class="container">
+            <h3 id="monProfile">{{ profilOrganisateur.pseudo }}</h3>
+            <div class="row g-2">
+                <div class="col-6">
+                    <p>Prénom :</p>
+                </div>
+                <div class="col-6">
+                    <p>{{ profilOrganisateur.prenom }}</p>
+                </div>
+                <div class="col-6">
+                    <p>Nom :</p>
+                </div>
+                <div class="col-6">
+                    <p>{{ profilOrganisateur.nom }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row g-2">
+                <div class="col-6">
+                    <p>Téléphone :</p>
+                </div>
+                <div class="col-6">
+                    <p>{{ profilOrganisateur.telephone }}</p>
+                </div>
+                <div class="col-6">
+                    <p>Mail :</p>
+                </div>
+                <div class="col-6">
+                    <p>{{ profilOrganisateur.mail }}</p>
+                </div>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <p>Campus :</p>
+                    </div>
+                    <div class="col-6">
+                       <p>{{ profilOrganisateur.campus.nom }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="reset" class="btn btn-primary btn-lg" ><a class="btn btn-primary " href="{{ path('sortie_liste') }}">Retour</a></button>
+    </div>
+{% endblock %}
+

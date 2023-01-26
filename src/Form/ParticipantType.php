@@ -40,8 +40,9 @@ class ParticipantType extends AbstractType
                     //pour la confirmation de mot de passe
                     'invalid_message' => 'les mots de passe ne correspondent pas',
                     'options' => ['attr' => ['class' => 'password-field']],
+
                     'required' => true,
-                    'first_options'  => ['label' => 'Mot de passe'],
+                    'first_options'  => ['label' => 'Mot de passe','attr' => ['placeholder' => '***********']],
                     'second_options' => ['label' => 'Confirmation']
 
 
