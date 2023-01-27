@@ -25,10 +25,8 @@ table{
     text-align: center;
 }
 
-dropdown{
 
-}
-label {
+.profileDiv label {
     display: block;
     font-size: 20px;
     text-align: left;
@@ -40,7 +38,7 @@ label {
     text-align: center;
     font-size: 50px;
 }
-input,
+.profileDiv  input,
 textarea{
     margin-bottom: 1rem;
     box-sizing: border-box;
@@ -62,3 +60,35 @@ textarea{
     padding-top: 20px;
 }
 
+.sortie-details{
+
+   display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    background-color: blueviolet;
+    border: 10px  white;
+    margin-left: 350px;
+    margin-right: 350px;
+    border-radius: 20px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+
+}
+.sortie-participants{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    word-spacing: 30px;
+    background-color: blueviolet;
+    border: 10px  white;
+    margin-left: 500px;
+    margin-right: 500px;
+    border-radius: 20px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+.filtre form {
+    font-size: smaller;
+}

@@ -3,14 +3,13 @@
 namespace App\Repository;
 
 use App\Entity\Sortie;
-use Couchbase\UserManager;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use http\Client\Curl\User;
-use http\Env\Request;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -46,24 +45,7 @@ class SortieRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }}
-    public function searchByCampus(ParticipantRepository $participantRepository) {
 
-$campus=$participantRepository->getCampus();
-        $queryBuilder = $this->createQueryBuilder('s');
-        $queryBuilder->Where('s.campus'== $campus);
-
-        $query = $queryBuilder->getQuery();
-
-
-       // $paginator=new Paginator($query);
-
-       $results = $query->getResult();
-        return $results;
-
-
-
-
-    }
 
 
 

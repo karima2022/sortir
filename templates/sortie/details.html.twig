@@ -29,7 +29,27 @@
         <div>Latitude : {{ sortie.lieu.latitude }}</div>
         <div>Longitude : {{ sortie.lieu.longitude}}</div>
         </div>
+ </div>
 </article>
     </div>
+    <br>
+<div class="sortie-participants">
+<article>
+        <table >
+            <br>
+            <tr>
+                <td> Pseudo </td>
+                <td> Nom </td>
+
+            </tr>
+            {%for participant in sortie.participants%}
+            <tr>
+                <td> {{ participant.pseudo }} </td>
+                <td> {{ participant.nom }} </td>
+            </tr>
+            {% endfor %}
+        </table>
+</article>
+</div>
 {% endblock %}
 
