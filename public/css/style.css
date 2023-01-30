@@ -92,3 +92,13 @@ textarea{
 .filtre form {
     font-size: smaller;
 }
+
+#annulerSortie{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+#annulerSortie a{
+    color:white;
+}
