@@ -2,7 +2,7 @@
 
 namespace App\filtre;
 
-class recherche
+class Recherche
 {
 
 

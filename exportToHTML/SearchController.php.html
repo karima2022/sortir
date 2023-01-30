@@ -1,0 +1,53 @@
+<html>
+<head>
+<title>SearchController.php</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #0033b3;}
+.s1 { color: #080808;}
+.s2 { color: #000000;}
+.s3 { color: #8c8c8c; font-style: italic;}
+.s4 { color: #8c8c8c; font-style: italic;}
+.s5 { color: #660000;}
+.s6 { color: #067d17;}
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+SearchController.php</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;?php</span>
+
+<span class="s0">namespace </span>App<span class="s1">\</span>Controller<span class="s1">;</span>
+
+<span class="s0">use </span>App<span class="s1">\</span>filtre<span class="s1">\</span>recherche<span class="s1">;</span>
+<span class="s0">use </span>App<span class="s1">\</span>Repository<span class="s1">\</span>CampusRepository<span class="s1">;</span>
+<span class="s0">use </span>App<span class="s1">\</span>Repository<span class="s1">\</span>SortieRepository<span class="s1">;</span>
+<span class="s0">use </span>Symfony<span class="s1">\</span>Bundle<span class="s1">\</span>FrameworkBundle<span class="s1">\</span>Controller<span class="s1">\</span>AbstractController<span class="s1">;</span>
+<span class="s0">use </span>Symfony<span class="s1">\</span>Component<span class="s1">\</span>HttpFoundation<span class="s1">\</span>Request<span class="s1">;</span>
+<span class="s0">use </span>Symfony<span class="s1">\</span>Component<span class="s1">\</span>HttpFoundation<span class="s1">\</span>Response<span class="s1">;</span>
+<span class="s0">use </span>Symfony<span class="s1">\</span>Component<span class="s1">\</span>Routing<span class="s1">\</span>Annotation<span class="s1">\</span>Route<span class="s1">;</span>
+
+<span class="s0">class </span>SearchController <span class="s0">extends </span>AbstractController
+<span class="s1">{</span>
+    <span class="s3">/**</span>
+     <span class="s3">* </span><span class="s4">@Route</span><span class="s3">(&quot;/search&quot;, name=&quot;app_search&quot;)</span>
+     <span class="s3">*/</span>
+    <span class="s0">public function </span>search<span class="s1">(</span>SortieRepository <span class="s5">$sortieRepository</span><span class="s1">, </span>CampusRepository <span class="s5">$campusRepository</span><span class="s1">, </span>Request <span class="s5">$request</span><span class="s1">): </span>Response
+    <span class="s1">{</span>
+  <span class="s5">$searchForm</span><span class="s1">= </span><span class="s0">new </span>recherche<span class="s1">();</span>
+
+
+
+
+
+        <span class="s0">return </span><span class="s5">$this</span><span class="s1">-&gt;</span>render<span class="s1">(</span><span class="s6">'search/index.html.twig'</span><span class="s1">, [</span>
+            <span class="s6">'controller_name' </span><span class="s1">=&gt; </span><span class="s6">'SearchController'</span><span class="s1">,</span>
+        <span class="s1">]);</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

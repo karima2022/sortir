@@ -1,0 +1,282 @@
+<html>
+<head>
+<title>SortieController.php</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #0033b3;}
+.s1 { color: #080808;}
+.s2 { color: #000000;}
+.s3 { color: #8c8c8c; font-style: italic;}
+.s4 { color: #8c8c8c; font-style: italic;}
+.s5 { color: #660000;}
+.s6 { color: #1750eb;}
+.s7 { color: #067d17;}
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+SortieController.php</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;?php</span>
+
+<span class="s0">namespace </span>App<span class="s1">\</span>Controller<span class="s1">;</span>
+
+<span class="s0">use </span>App<span class="s1">\</span>Entity<span class="s1">\</span>Etat<span class="s1">;</span>
+<span class="s0">use </span>App<span class="s1">\</span>Entity<span class="s1">\</span>Participant<span class="s1">;</span>
+<span class="s0">use </span>App<span class="s1">\</span>Entity<span class="s1">\</span>Sortie<span class="s1">;</span>
+<span class="s0">use </span>App<span class="s1">\</span>filtre<span class="s1">\</span>recherche<span class="s1">;</span>
+<span class="s0">use </span>App<span class="s1">\</span>Form<span class="s1">\</span>CreerSortieType<span class="s1">;</span>
+<span class="s0">use </span>App<span class="s1">\</span>Form<span class="s1">\</span>ParticipantType<span class="s1">;</span>
+<span class="s0">use </span>App<span class="s1">\</span>Form<span class="s1">\</span>RechercheType<span class="s1">;</span>
+<span class="s0">use </span>App<span class="s1">\</span>Repository<span class="s1">\</span>CampusRepository<span class="s1">;</span>
+<span class="s0">use </span>App<span class="s1">\</span>Repository<span class="s1">\</span>EtatRepository<span class="s1">;</span>
+<span class="s0">use </span>App<span class="s1">\</span>Repository<span class="s1">\</span>ParticipantRepository<span class="s1">;</span>
+
+<span class="s0">use </span>App<span class="s1">\</span>Repository<span class="s1">\</span>SortieRepository<span class="s1">;</span>
+
+
+<span class="s0">use </span>Doctrine<span class="s1">\</span>ORM<span class="s1">\</span>EntityManager<span class="s1">;</span>
+<span class="s0">use </span>Doctrine<span class="s1">\</span>ORM<span class="s1">\</span>EntityManagerInterface<span class="s1">;</span>
+<span class="s0">use </span>Doctrine<span class="s1">\</span>ORM<span class="s1">\</span>Mapping<span class="s1">\</span>OrderBy<span class="s1">;</span>
+
+<span class="s0">use </span>Symfony<span class="s1">\</span>Bundle<span class="s1">\</span>FrameworkBundle<span class="s1">\</span>Controller<span class="s1">\</span>AbstractController<span class="s1">;</span>
+<span class="s0">use </span>Symfony<span class="s1">\</span>Component<span class="s1">\</span>Form<span class="s1">\</span>Extension<span class="s1">\</span>Core<span class="s1">\</span>Type<span class="s1">\</span>SearchType<span class="s1">;</span>
+<span class="s0">use </span>Symfony<span class="s1">\</span>Component<span class="s1">\</span>HttpFoundation<span class="s1">\</span>Request<span class="s1">;</span>
+<span class="s0">use </span>Symfony<span class="s1">\</span>Component<span class="s1">\</span>HttpFoundation<span class="s1">\</span>Response<span class="s1">;</span>
+<span class="s0">use </span>Symfony<span class="s1">\</span>Component<span class="s1">\</span>Routing<span class="s1">\</span>Annotation<span class="s1">\</span>Route<span class="s1">;</span>
+<span class="s0">use </span>Symfony<span class="s1">\</span>Component<span class="s1">\</span>Security<span class="s1">\</span>Core<span class="s1">\</span>User<span class="s1">\</span>UserInterface<span class="s1">;</span>
+
+<span class="s0">class </span>SortieController <span class="s0">extends </span>AbstractController
+<span class="s1">{</span>
+    <span class="s3">/**</span>
+     <span class="s3">* </span><span class="s4">@Route</span><span class="s3">(&quot;/sortie/liste&quot;, name=&quot;sortie_liste&quot;)</span>
+     <span class="s3">*/</span>
+    <span class="s0">public function list</span><span class="s1">(</span>EntityManagerInterface <span class="s5">$entityManager</span><span class="s1">, </span>SortieRepository <span class="s5">$sortieRepository</span><span class="s1">, </span>CampusRepository <span class="s5">$campusRepository</span><span class="s1">, </span>EtatRepository <span class="s5">$etatRepository</span><span class="s1">, </span>Request <span class="s5">$request</span><span class="s1">): </span>Response
+    <span class="s1">{</span>
+
+
+        <span class="s3">// $sorties = $sortieRepository-&gt;findAll();</span>
+        <span class="s5">$etatCloture </span><span class="s1">= </span><span class="s5">$etatRepository</span><span class="s1">-&gt;</span>find<span class="s1">(</span><span class="s6">3</span><span class="s1">);</span>
+        <span class="s5">$etatEnCours </span><span class="s1">= </span><span class="s5">$etatRepository</span><span class="s1">-&gt;</span>find<span class="s1">(</span><span class="s6">4</span><span class="s1">);</span>
+        <span class="s5">$etatPasse </span><span class="s1">= </span><span class="s5">$etatRepository</span><span class="s1">-&gt;</span>find<span class="s1">(</span><span class="s6">5</span><span class="s1">);</span>
+        <span class="s5">$etatCree</span><span class="s1">=</span><span class="s5">$etatRepository</span><span class="s1">-&gt;</span>find<span class="s1">(</span><span class="s6">1</span><span class="s1">);</span>
+        <span class="s5">$etatOuvert</span><span class="s1">=</span><span class="s5">$etatRepository</span><span class="s1">-&gt;</span>find<span class="s1">(</span><span class="s6">2</span><span class="s1">);</span>
+        <span class="s5">$time </span><span class="s1">= </span><span class="s0">new </span><span class="s1">\</span>DateTime<span class="s1">();</span>
+
+        <span class="s5">$time</span><span class="s1">-&gt;</span>format<span class="s1">(</span><span class="s7">'H:i:s Y-m-d'</span><span class="s1">);</span>
+
+
+        <span class="s5">$search </span><span class="s1">= </span><span class="s0">new </span>recherche<span class="s1">();</span>
+        <span class="s5">$searchForm </span><span class="s1">= </span><span class="s5">$this</span><span class="s1">-&gt;</span>createForm<span class="s1">(</span>RechercheType<span class="s1">::</span><span class="s0">class</span><span class="s1">, </span><span class="s5">$search</span><span class="s1">);</span>
+
+        <span class="s5">$searchForm</span><span class="s1">-&gt;</span>handleRequest<span class="s1">(</span><span class="s5">$request</span><span class="s1">);</span>
+        <span class="s5">$user </span><span class="s1">= </span><span class="s5">$this</span><span class="s1">-&gt;</span>getUser<span class="s1">();</span>
+        <span class="s0">if </span><span class="s1">(</span><span class="s5">$searchForm</span><span class="s1">-&gt;</span>isSubmitted<span class="s1">()) {</span>
+            <span class="s5">$campusSearch </span><span class="s1">= </span><span class="s5">$search</span><span class="s1">-&gt;</span>getCampus<span class="s1">();</span>
+            <span class="s5">$nomSearch </span><span class="s1">= </span><span class="s5">$search</span><span class="s1">-&gt;</span>getNom<span class="s1">();</span>
+            <span class="s5">$dateDebut </span><span class="s1">= </span><span class="s5">$search</span><span class="s1">-&gt;</span>getDateDebut<span class="s1">();</span>
+            <span class="s5">$dateFin </span><span class="s1">= </span><span class="s5">$search</span><span class="s1">-&gt;</span>getDateFin<span class="s1">();</span>
+            <span class="s5">$inscritSearch </span><span class="s1">= </span><span class="s5">$search</span><span class="s1">-&gt;</span>getSortieInscrit<span class="s1">();</span>
+            <span class="s5">$pasinscritSearch </span><span class="s1">= </span><span class="s5">$search</span><span class="s1">-&gt;</span>getSortieNonInscrit<span class="s1">();</span>
+            <span class="s5">$sortieOrganisateur </span><span class="s1">= </span><span class="s5">$search</span><span class="s1">-&gt;</span>getSortieOrganisateur<span class="s1">();</span>
+            <span class="s5">$sortiePassee </span><span class="s1">= </span><span class="s5">$search</span><span class="s1">-&gt;</span>getSortiePassee<span class="s1">();</span>
+            <span class="s5">$user </span><span class="s1">= </span><span class="s5">$this</span><span class="s1">-&gt;</span>getUser<span class="s1">();</span>
+
+            <span class="s3">// $sorties=$sortieRepository-&gt;findby(array('campus'=&gt;$campusSearch));</span>
+            <span class="s5">$sorties </span><span class="s1">= </span><span class="s5">$sortieRepository</span><span class="s1">-&gt;</span>filtre<span class="s1">(</span><span class="s5">$search</span><span class="s1">, </span><span class="s5">$user</span><span class="s1">);</span>
+
+            <span class="s0">foreach </span><span class="s1">(</span><span class="s5">$sorties </span><span class="s0">as </span><span class="s5">$sortie</span><span class="s1">) {</span>
+                <span class="s0">if </span><span class="s1">(</span><span class="s5">$sortie</span><span class="s1">-&gt;</span>getEtat<span class="s1">() == </span><span class="s5">$etatCree </span><span class="s0">or </span><span class="s5">$sortie</span><span class="s1">-&gt;</span>getEtat<span class="s1">() == </span><span class="s5">$etatOuvert</span><span class="s1">) {</span>
+                <span class="s0">if </span><span class="s1">(</span><span class="s5">$sortie</span><span class="s1">-&gt;</span>getDateHeureDebut<span class="s1">() &lt; </span><span class="s5">$time</span><span class="s1">) {</span>
+                    <span class="s5">$sortie</span><span class="s1">-&gt;</span>setEtat<span class="s1">(</span><span class="s5">$etatPasse</span><span class="s1">);</span>
+                <span class="s1">} </span><span class="s0">elseif </span><span class="s1">(</span><span class="s5">$sortie</span><span class="s1">-&gt;</span>getDateHeureDebut<span class="s1">() == </span><span class="s5">$time</span><span class="s1">) {</span>
+                    <span class="s5">$sortie</span><span class="s1">-&gt;</span>setEtat<span class="s1">(</span><span class="s5">$etatEnCours</span><span class="s1">);</span>
+                <span class="s1">} </span><span class="s0">elseif </span><span class="s1">(</span><span class="s5">$sortie</span><span class="s1">-&gt;</span>getDateLimiteInscription<span class="s1">() &lt; </span><span class="s5">$time</span><span class="s1">) {</span>
+                    <span class="s5">$sortie</span><span class="s1">-&gt;</span>setEtat<span class="s1">(</span><span class="s5">$etatCloture</span><span class="s1">);</span>
+                <span class="s1">}}</span>
+
+
+<span class="s3">//            if($sortie-&gt;getDateHeureDebut()&lt; ($time-&gt;modify('+'.$nbDay.' days'))){</span>
+<span class="s3">//                $sortieRepository-&gt;remove($sortie, true);</span>
+<span class="s3">//            }</span>
+
+                <span class="s5">$entityManager</span><span class="s1">-&gt;</span>persist<span class="s1">(</span><span class="s5">$sortie</span><span class="s1">);</span>
+                <span class="s5">$entityManager</span><span class="s1">-&gt;</span>flush<span class="s1">();</span>
+            <span class="s1">}</span>
+
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+
+
+            <span class="s5">$sorties </span><span class="s1">= </span><span class="s5">$sortieRepository</span><span class="s1">-&gt;</span>listeSortiesDefaut<span class="s1">(</span><span class="s5">$user</span><span class="s1">);</span>
+
+            <span class="s0">foreach </span><span class="s1">(</span><span class="s5">$sorties </span><span class="s0">as </span><span class="s5">$sortie</span><span class="s1">) {</span>
+                <span class="s0">if </span><span class="s1">(</span><span class="s5">$sortie</span><span class="s1">-&gt;</span>getEtat<span class="s1">() == </span><span class="s5">$etatCree </span><span class="s0">or </span><span class="s5">$sortie</span><span class="s1">-&gt;</span>getEtat<span class="s1">() == </span><span class="s5">$etatOuvert</span><span class="s1">) {</span>
+                    <span class="s0">if </span><span class="s1">(</span><span class="s5">$sortie</span><span class="s1">-&gt;</span>getDateHeureDebut<span class="s1">() &lt; </span><span class="s5">$time</span><span class="s1">) {</span>
+                        <span class="s5">$sortie</span><span class="s1">-&gt;</span>setEtat<span class="s1">(</span><span class="s5">$etatPasse</span><span class="s1">);</span>
+                    <span class="s1">} </span><span class="s0">elseif </span><span class="s1">(</span><span class="s5">$sortie</span><span class="s1">-&gt;</span>getDateHeureDebut<span class="s1">() == </span><span class="s5">$time</span><span class="s1">) {</span>
+                        <span class="s5">$sortie</span><span class="s1">-&gt;</span>setEtat<span class="s1">(</span><span class="s5">$etatEnCours</span><span class="s1">);</span>
+                    <span class="s1">} </span><span class="s0">elseif </span><span class="s1">(</span><span class="s5">$sortie</span><span class="s1">-&gt;</span>getDateLimiteInscription<span class="s1">() &lt; </span><span class="s5">$time</span><span class="s1">) {</span>
+                        <span class="s5">$sortie</span><span class="s1">-&gt;</span>setEtat<span class="s1">(</span><span class="s5">$etatCloture</span><span class="s1">);</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+
+
+<span class="s3">//            if($sortie-&gt;getDateHeureDebut()&lt; ($time-&gt;modify('+'.$nbDay.' days'))){</span>
+<span class="s3">//                $sortieRepository-&gt;remove($sortie, true);</span>
+<span class="s3">//            }</span>
+
+                <span class="s5">$entityManager</span><span class="s1">-&gt;</span>persist<span class="s1">(</span><span class="s5">$sortie</span><span class="s1">);</span>
+                <span class="s5">$entityManager</span><span class="s1">-&gt;</span>flush<span class="s1">();</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+
+
+        <span class="s5">$campuss </span><span class="s1">= </span><span class="s5">$campusRepository</span><span class="s1">-&gt;</span>findAll<span class="s1">();</span>
+
+
+        <span class="s0">return </span><span class="s5">$this</span><span class="s1">-&gt;</span>render<span class="s1">(</span><span class="s7">'sortie/liste.html.twig'</span><span class="s1">, [</span>
+            <span class="s7">&quot;sorties&quot; </span><span class="s1">=&gt; </span><span class="s5">$sorties</span><span class="s1">, </span><span class="s7">&quot;campuss&quot; </span><span class="s1">=&gt; </span><span class="s5">$campuss</span><span class="s1">, </span><span class="s7">&quot;searchForm&quot; </span><span class="s1">=&gt; </span><span class="s5">$searchForm</span><span class="s1">-&gt;</span>createView<span class="s1">(),</span>
+
+        <span class="s1">]);</span>
+
+
+    <span class="s1">}</span>
+
+    <span class="s3">/**</span>
+     <span class="s3">* </span><span class="s4">@Route </span><span class="s3">(&quot;/sortie/details/{id}&quot;, name=&quot;sortie_details&quot;)</span>
+     <span class="s3">*/</span>
+
+    <span class="s0">public function </span>details<span class="s1">(</span>int <span class="s5">$id</span><span class="s1">, </span>SortieRepository <span class="s5">$sortieRepository</span><span class="s1">): </span>Response
+    <span class="s1">{</span>
+        <span class="s5">$sortie </span><span class="s1">= </span><span class="s5">$sortieRepository</span><span class="s1">-&gt;</span>find<span class="s1">(</span><span class="s5">$id</span><span class="s1">);</span>
+        <span class="s0">if </span><span class="s1">(!</span><span class="s5">$sortie</span><span class="s1">) {</span>
+            <span class="s0">throw </span><span class="s5">$this</span><span class="s1">-&gt;</span>createNotFoundException<span class="s1">(</span><span class="s7">'Erreur'</span><span class="s1">);</span>
+        <span class="s1">}</span>
+
+
+        <span class="s0">return </span><span class="s5">$this</span><span class="s1">-&gt;</span>render<span class="s1">(</span><span class="s7">'sortie/details.html.twig'</span><span class="s1">, [</span>
+            <span class="s7">&quot;sortie&quot; </span><span class="s1">=&gt; </span><span class="s5">$sortie</span>
+        <span class="s1">]);</span>
+
+    <span class="s1">}</span>
+
+    <span class="s3">/**</span>
+     <span class="s3">* </span><span class="s4">@Route </span><span class="s3">(&quot;/sortie/sinscrire/{id}&quot;, name=&quot;sortie_sinscrire&quot;)</span>
+     <span class="s3">*/</span>
+    <span class="s0">public function </span>createParticipant<span class="s1">(</span>int <span class="s5">$id</span><span class="s1">, </span>SortieRepository <span class="s5">$sortieRepository</span><span class="s1">, </span>EntityManagerInterface <span class="s5">$entityManager</span><span class="s1">, </span>EtatRepository <span class="s5">$etatRepository</span><span class="s1">)</span>
+    <span class="s1">{</span>
+        <span class="s5">$user </span><span class="s1">= </span><span class="s5">$this</span><span class="s1">-&gt;</span>getUser<span class="s1">();</span>
+
+        <span class="s5">$sortie </span><span class="s1">= </span><span class="s5">$sortieRepository</span><span class="s1">-&gt;</span>find<span class="s1">(</span><span class="s5">$id</span><span class="s1">);</span>
+
+
+        <span class="s5">$sortie</span><span class="s1">-&gt;</span>addParticipant<span class="s1">(</span><span class="s5">$user</span><span class="s1">);</span>
+        <span class="s5">$etat </span><span class="s1">= </span><span class="s5">$etatRepository</span><span class="s1">-&gt;</span>find<span class="s1">(</span><span class="s6">3</span><span class="s1">);</span>
+
+
+        <span class="s0">if </span><span class="s1">(</span><span class="s5">$sortie</span><span class="s1">-&gt;</span>getParticipants<span class="s1">()-&gt;</span>count<span class="s1">() == </span><span class="s5">$sortie</span><span class="s1">-&gt;</span>getNbInscriptionsMax<span class="s1">()) {</span>
+            <span class="s5">$sortie</span><span class="s1">-&gt;</span>setEtat<span class="s1">(</span><span class="s5">$etat</span><span class="s1">);</span>
+        <span class="s1">}</span>
+
+        <span class="s5">$entityManager</span><span class="s1">-&gt;</span>persist<span class="s1">(</span><span class="s5">$sortie</span><span class="s1">);</span>
+        <span class="s5">$entityManager</span><span class="s1">-&gt;</span>flush<span class="s1">();</span>
+
+
+        <span class="s0">return </span><span class="s5">$this</span><span class="s1">-&gt;</span>redirectToRoute<span class="s1">(</span><span class="s7">'sortie_liste'</span><span class="s1">);</span>
+
+    <span class="s1">}</span>
+
+    <span class="s3">/**</span>
+     <span class="s3">* </span><span class="s4">@Route </span><span class="s3">(&quot;/sortie/sedesister/{id}&quot;, name=&quot;sortie_desister&quot;)</span>
+     <span class="s3">*/</span>
+    <span class="s0">public function </span>deleteParticipant<span class="s1">(</span>int <span class="s5">$id</span><span class="s1">, </span>SortieRepository <span class="s5">$sortieRepository</span><span class="s1">, </span>EntityManagerInterface <span class="s5">$entityManager</span><span class="s1">, </span>EtatRepository <span class="s5">$etatRepository</span><span class="s1">)</span>
+    <span class="s1">{</span>
+        <span class="s5">$user </span><span class="s1">= </span><span class="s5">$this</span><span class="s1">-&gt;</span>getUser<span class="s1">();</span>
+
+        <span class="s5">$sortie </span><span class="s1">= </span><span class="s5">$sortieRepository</span><span class="s1">-&gt;</span>find<span class="s1">(</span><span class="s5">$id</span><span class="s1">);</span>
+
+
+        <span class="s5">$sortie</span><span class="s1">-&gt;</span>removeParticipant<span class="s1">(</span><span class="s5">$user</span><span class="s1">);</span>
+
+        <span class="s5">$etat </span><span class="s1">= </span><span class="s5">$etatRepository</span><span class="s1">-&gt;</span>find<span class="s1">(</span><span class="s6">2</span><span class="s1">);</span>
+
+
+        <span class="s0">if </span><span class="s1">(</span><span class="s5">$sortie</span><span class="s1">-&gt;</span>getParticipants<span class="s1">()-&gt;</span>count<span class="s1">() &lt; </span><span class="s5">$sortie</span><span class="s1">-&gt;</span>getNbInscriptionsMax<span class="s1">()) {</span>
+            <span class="s5">$sortie</span><span class="s1">-&gt;</span>setEtat<span class="s1">(</span><span class="s5">$etat</span><span class="s1">);</span>
+        <span class="s1">}</span>
+
+        <span class="s5">$entityManager</span><span class="s1">-&gt;</span>persist<span class="s1">(</span><span class="s5">$sortie</span><span class="s1">);</span>
+        <span class="s5">$entityManager</span><span class="s1">-&gt;</span>flush<span class="s1">();</span>
+
+
+        <span class="s0">return </span><span class="s5">$this</span><span class="s1">-&gt;</span>redirectToRoute<span class="s1">(</span><span class="s7">'sortie_liste'</span><span class="s1">);</span>
+
+    <span class="s1">}</span>
+
+    <span class="s3">/**</span>
+     <span class="s3">* </span><span class="s4">@Route </span><span class="s3">(&quot;/sortie/publier/{id}&quot;, name=&quot;sortie_publier&quot;)</span>
+     <span class="s3">*/</span>
+    <span class="s0">public function </span>publierSortie<span class="s1">(</span>int <span class="s5">$id</span><span class="s1">, </span>SortieRepository <span class="s5">$sortieRepository</span><span class="s1">, </span>EntityManagerInterface <span class="s5">$entityManager</span><span class="s1">, </span>EtatRepository <span class="s5">$etatRepository</span><span class="s1">)</span>
+    <span class="s1">{</span>
+
+
+        <span class="s5">$sortie </span><span class="s1">= </span><span class="s5">$sortieRepository</span><span class="s1">-&gt;</span>find<span class="s1">(</span><span class="s5">$id</span><span class="s1">);</span>
+
+
+        <span class="s5">$etat </span><span class="s1">= </span><span class="s5">$etatRepository</span><span class="s1">-&gt;</span>find<span class="s1">(</span><span class="s6">2</span><span class="s1">);</span>
+
+
+        <span class="s5">$sortie</span><span class="s1">-&gt;</span>setEtat<span class="s1">(</span><span class="s5">$etat</span><span class="s1">);</span>
+
+        <span class="s5">$entityManager</span><span class="s1">-&gt;</span>persist<span class="s1">(</span><span class="s5">$sortie</span><span class="s1">);</span>
+        <span class="s5">$entityManager</span><span class="s1">-&gt;</span>flush<span class="s1">();</span>
+
+
+        <span class="s0">return </span><span class="s5">$this</span><span class="s1">-&gt;</span>redirectToRoute<span class="s1">(</span><span class="s7">'sortie_liste'</span><span class="s1">);</span>
+
+    <span class="s1">}</span>
+
+
+    <span class="s3">/**</span>
+     <span class="s3">* </span><span class="s4">@Route </span><span class="s3">(&quot;/sortie/annuler/{id}&quot;, name=&quot;sortie_annuler&quot;)</span>
+     <span class="s3">*/</span>
+    <span class="s0">public function </span>annulerSortie<span class="s1">(</span>int <span class="s5">$id</span><span class="s1">, </span>SortieRepository <span class="s5">$sortieRepository</span><span class="s1">, </span>EntityManagerInterface <span class="s5">$entityManager</span><span class="s1">, </span>EtatRepository <span class="s5">$etatRepository</span><span class="s1">, </span>Request <span class="s5">$request</span><span class="s1">):</span>Response
+    <span class="s1">{</span>
+
+
+        <span class="s5">$sortie </span><span class="s1">= </span><span class="s5">$sortieRepository</span><span class="s1">-&gt;</span>find<span class="s1">(</span><span class="s5">$id</span><span class="s1">);</span>
+        <span class="s5">$etat </span><span class="s1">= </span><span class="s5">$etatRepository</span><span class="s1">-&gt;</span>find<span class="s1">(</span><span class="s6">6</span><span class="s1">);</span>
+
+
+<span class="s3">//dd($motif);</span>
+       
+        <span class="s5">$annulerSortieForm </span><span class="s1">= </span><span class="s5">$this</span><span class="s1">-&gt;</span>createForm<span class="s1">(</span>CreerSortieType<span class="s1">::</span><span class="s0">class</span><span class="s1">, </span><span class="s5">$sortie</span><span class="s1">);</span>
+        <span class="s5">$annulerSortieForm</span><span class="s1">-&gt;</span>handleRequest<span class="s1">(</span><span class="s5">$request</span><span class="s1">);</span>
+
+        <span class="s0">if</span><span class="s1">(</span><span class="s5">$annulerSortieForm</span><span class="s1">-&gt;</span>isSubmitted<span class="s1">()){</span>
+            <span class="s5">$motif</span><span class="s1">=</span><span class="s5">$annulerSortieForm</span><span class="s1">-&gt;</span>get<span class="s1">(</span><span class="s7">'annulerSortieForm'</span><span class="s1">)-&gt;</span>getData<span class="s1">();</span>
+
+        <span class="s5">$sortie</span><span class="s1">-&gt;</span>setInfosSortie<span class="s1">(</span><span class="s5">$motif</span><span class="s1">);</span>
+        <span class="s5">$sortie</span><span class="s1">-&gt;</span>setEtat<span class="s1">(</span><span class="s5">$etat</span><span class="s1">);}</span>
+        <span class="s5">$entityManager</span><span class="s1">-&gt;</span>persist<span class="s1">(</span><span class="s5">$sortie</span><span class="s1">);</span>
+        <span class="s5">$entityManager</span><span class="s1">-&gt;</span>flush<span class="s1">();</span>
+
+
+        <span class="s0">return </span><span class="s5">$this</span><span class="s1">-&gt;</span>render<span class="s1">(</span><span class="s7">'sortie/annulerSortie.html.twig'</span><span class="s1">, [</span>
+            <span class="s7">&quot;sortie&quot; </span><span class="s1">=&gt; </span><span class="s5">$sortie</span><span class="s1">,</span>
+            <span class="s7">'annulerSortieForm' </span><span class="s1">=&gt; </span><span class="s5">$annulerSortieForm</span><span class="s1">-&gt;</span>createView<span class="s1">()</span>
+        <span class="s1">]);</span>
+
+
+    <span class="s1">}</span>
+
+
+<span class="s1">}</span>
+
+
+
+</pre>
+</body>
+</html>
