@@ -7,16 +7,10 @@ use App\Entity\Sortie;
 
 use App\filtre\Recherche;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityManagerInterface;
+
 use Doctrine\Persistence\ManagerRegistry;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
 
-use Symfony\Component\Form\Extension\Core\Type\SearchType;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 
 /**

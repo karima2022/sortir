@@ -12,11 +12,11 @@ nav li {
     margin-right: 1rem;
 }
 .logo img{
-height: 200px;
+    height: 200px;
 }
 
 .entete{
-   display: flex;
+    display: flex;
     justify-content: space-between;
     align-items: center;
 }
@@ -51,8 +51,8 @@ textarea{
 .profileDiv
 {
     text-align: center;
-   background-color: blueviolet;
-   border: 10px  white;
+    background-color: blueviolet;
+    border: 10px  white;
     margin-left: 350px;
     margin-right: 350px;
     border-radius: 20px;
@@ -62,7 +62,7 @@ textarea{
 
 .sortie-details{
 
-   display: flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     text-align: left;
