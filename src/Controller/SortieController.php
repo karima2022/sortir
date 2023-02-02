@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\filtre\Recherche;
 use App\Form\AnnulerSortieType;
@@ -19,7 +20,7 @@ use App\Services\UpdateEtat;
 
 use Doctrine\ORM\EntityManagerInterface;
 
-use Symfony\Component\Security\Core\User\UserInterface;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -32,90 +33,30 @@ class SortieController extends AbstractController
     /**
      * @Route("/sortie/liste", name="sortie_liste")
      */
-    public function list(UpdateEtat $updateEtat,SortieRepository $sortieRepository, EtatRepository $etatRepository,EntityManagerInterface $entityManager,CampusRepository $campusRepository, Request $request): Response
+    public function list(UpdateEtat $updateEtat, SortieRepository $sortieRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager, CampusRepository $campusRepository, Request $request): Response
     {
 
 
-      $updateEtat->UpdateEtat($sortieRepository,$etatRepository,$entityManager);
-
-//        $sorties = $sortieRepository->findAll();
-//        $etatCloture = $etatRepository->find(3);
-//        $etatEnCours = $etatRepository->find(4);
-//        $etatPasse = $etatRepository->find(5);
-//        $etatCree = $etatRepository->find(1);
-//        $etatOuvert = $etatRepository->find(2);
-//
-//        $time = new \DateTime();
-//
-//        $time->format('H:i:s Y-m-d');
+        $updateEtat->UpdateEtat($sortieRepository, $etatRepository, $entityManager);
 
 
         $search = new Recherche();
         $searchForm = $this->createForm(RechercheType::class, $search);
 
         $searchForm->handleRequest($request);
+        /**
+         * @var Participant $user
+         */
         $user = $this->getUser();
         if ($searchForm->isSubmitted()) {
-            $campusSearch = $search->getCampus();
-            $nomSearch = $search->getNom();
-            $dateDebut = $search->getDateDebut();
-            $dateFin = $search->getDateFin();
-            $inscritSearch = $search->getSortieInscrit();
-            $pasinscritSearch = $search->getSortieNonInscrit();
-            $sortieOrganisateur = $search->getSortieOrganisateur();
-            $sortiePassee = $search->getSortiePassee();
-            $user = $this->getUser();
 
-            // $sorties=$sortieRepository->findby(array('campus'=>$campusSearch));
             $sorties = $sortieRepository->filtre($search, $user);
 
-//            foreach ($sorties as $sortie) {
-//                // $heureFinSortie=$sortie->getDateHeureDebut()->add('+'.$sortie->getDuree.'minutes');
-//                if ($sortie->getEtat() == $etatCree or $sortie->getEtat() == $etatOuvert) {
-//                    if ($sortie->getDateHeureDebut() < $time) {
-//                        $sortie->setEtat($etatPasse);
-//                    } elseif ($sortie->getDateHeureDebut() == $time) {
-//                        $sortie->setEtat($etatEnCours);
-//                    } elseif ($sortie->getDateLimiteInscription() < $time) {
-//                        $sortie->setEtat($etatCloture);
-//                    }
-//                }
-
-//
-//            }
-//            $entityManager->persist($sortie);
-//            $entityManager->flush();
         } else {
-            $user = $this->getUser();
 
             $sorties = $sortieRepository->listeSortiesDefaut($user);
 
-
-
-//            foreach ($sorties as $sortie) {
-//                //    $heureFinSortie=$sortie->getDateHeureDebut()->date_add($sortie->getDuree());
-//                // $heureFinSortie=date_diff($sortie->getDateHeureDebut(),$sortie->getDateHeureDebut()+$sortie->getDuree());
-//                //  dd($heureFinSortie);
-//                if ($sortie->getEtat() == $etatCree or $sortie->getEtat() == $etatOuvert) {
-//                    if ($sortie->getDateHeureDebut() < $time) {
-//                        $sortie->setEtat($etatPasse);
-//                        // } elseif ($sortie->getDateHeureDebut()> $time && $sortie->getDateHeureDebut()->add('+'.$sortie->getDuree().'minutes')) {
-//                        //   $sortie->setEtat($etatEnCours);
-//                    } elseif ($sortie->getDateLimiteInscription() < $time) {
-//                        $sortie->setEtat($etatCloture);
-//                    }
-                }
-
-
-//            if($sortie->getDateHeureDebut()< ($time->modify('+'.$nbDay.' days'))){
-//                $sortieRepository->remove($sortie, true);
-////            }
-//
-//                $entityManager->persist($sortie);
-//                $entityManager->flush();
-//            }
-
-
+        }
 
         $campuss = $campusRepository->findAll();
 
@@ -128,11 +69,13 @@ class SortieController extends AbstractController
 
     }
 
+
     /**
      * @Route ("/sortie/details/{id}", name="sortie_details")
      */
 
-    public function details(int $id, SortieRepository $sortieRepository): Response
+    public
+    function details(int $id, SortieRepository $sortieRepository): Response
     {
         $sortie = $sortieRepository->find($id);
         if (!$sortie) {
@@ -149,8 +92,12 @@ class SortieController extends AbstractController
     /**
      * @Route ("/sortie/sinscrire/{id}", name="sortie_sinscrire")
      */
-    public function createParticipant(int $id, SortieRepository $sortieRepository, EntityManagerInterface $entityManager, EtatRepository $etatRepository)
+    public
+    function createParticipant(int $id, SortieRepository $sortieRepository, EntityManagerInterface $entityManager, EtatRepository $etatRepository)
     {
+        /**
+         * @var Participant $user
+         */
         $user = $this->getUser();
 
         $sortie = $sortieRepository->find($id);
@@ -175,8 +122,12 @@ class SortieController extends AbstractController
     /**
      * @Route ("/sortie/sedesister/{id}", name="sortie_desister")
      */
-    public function deleteParticipant(int $id, SortieRepository $sortieRepository, EntityManagerInterface $entityManager, EtatRepository $etatRepository)
+    public
+    function deleteParticipant(int $id, SortieRepository $sortieRepository, EntityManagerInterface $entityManager, EtatRepository $etatRepository)
     {
+        /**
+         * @var Participant $user
+         */
         $user = $this->getUser();
 
         $sortie = $sortieRepository->find($id);
@@ -184,7 +135,7 @@ class SortieController extends AbstractController
 
         $sortie->removeParticipant($user);
 
-        $etat = $etatRepository->find(2);
+        $etat = $etatRepository->findOneBy(array('libelle'=>'Ouverte'));
 
 
         if ($sortie->getParticipants()->count() < $sortie->getNbInscriptionsMax()) {
@@ -202,14 +153,15 @@ class SortieController extends AbstractController
     /**
      * @Route ("/sortie/publier/{id}", name="sortie_publier")
      */
-    public function publierSortie(int $id, SortieRepository $sortieRepository, EntityManagerInterface $entityManager, EtatRepository $etatRepository)
+    public
+    function publierSortie(int $id, SortieRepository $sortieRepository, EntityManagerInterface $entityManager, EtatRepository $etatRepository)
     {
 
 
         $sortie = $sortieRepository->find($id);
 
 
-        $etat = $etatRepository->find(2);
+        $etat = $etatRepository->findOneBy(array('libelle'=>'Ouverte'));
 
 
         $sortie->setEtat($etat);
@@ -226,10 +178,11 @@ class SortieController extends AbstractController
     /**
      * @Route ("/sortie/annuler/{id}", name="sortie_annuler")
      */
-    public function annulerSortie(int $id, Request $request, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, EtatRepository $etatRepository)
+    public
+    function annulerSortie(int $id, Request $request, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, EtatRepository $etatRepository)
     {
         $sortie = $sortieRepository->find($id);
-        $etat = $etatRepository->find(6);
+        $etat = $etatRepository->findOneBy(array('libelle'=>'Annulée'));
 
 
         $annulerSortieForm = $this->createForm(AnnulerSortieType::class, $sortie);
@@ -243,7 +196,6 @@ class SortieController extends AbstractController
             $entityManager->flush();
             return $this->redirectToRoute('sortie_liste');
         }
-
 
 
         return $this->render('sortie/annulerSortie.html.twig', [

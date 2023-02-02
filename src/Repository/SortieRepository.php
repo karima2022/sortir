@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 
-use App\filtre\recherche;
+use App\filtre\Recherche;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -64,15 +64,14 @@ class SortieRepository extends ServiceEntityRepository
             ->andWhere('s.organisateur = :user OR s.etat != 1')
             ->setParameter('user', $user)->getQuery()->getResult();
 
-        //  $paginator = new Paginator($qb->getQuery());
 
-        // return $paginator;
     }
 
-    public function filtre(recherche $recherche, Participant $user)
+    public function filtre(Recherche $recherche, Participant $user)
     {
 
         $query = $this->createQueryBuilder('s');
+        $query->andWhere('s.etat != 7');
 
         if ($recherche->getSortiePassee()) {
             $query->andWhere('s.etat = 5');
@@ -115,8 +114,17 @@ class SortieRepository extends ServiceEntityRepository
 
     }
 
+    public function MesSorties(Participant $user): array
+    {
 
 
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.organisateur = :user or :user MEMBER OF s.participants')
+
+            ->setParameter('user', $user)->getQuery()->getResult();
+
+
+    }
 
 
 

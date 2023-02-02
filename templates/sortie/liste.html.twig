@@ -35,8 +35,7 @@
     </div>
 
 </div>
-
-
+    {% if sorties %}
     <table class="table table-dark table-striped">
         <br>
         <tr>
@@ -64,22 +63,20 @@
                 <td>
                     <a href="{{ path('profilOrganisateur_main',{'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.nom }}</a>
                 </td>
-                {#                {% if sortie.organisateur.nom == app.user.nom %} #}
-                {#                <td><a href=" #" title="Modifier">Modifier</a> -<a href=" #" title="Publier">Publier</a></td> #}
-                {#                {% elseif app.user in sortie.participants  %} #}
-                {#                    <td><a href="{{ path('sortie_details',{'id':sortie.id}) }}"title="Afficher">Afficher</a> - <a href=" #" title="Se désister">Se Désister</a></td> #}
-                {#                 {% else %} #}
-                {#                     <td><a href="{{ path('sortie_details',{'id':sortie.id}) }}"title="Afficher">Afficher</a> - <a href="{{ path('sortie_sinscrire',{'id':sortie.id}) }}" title="S'inscrire'">S'inscrire'</a></td> #}
-                {#                {% endif %} #}
+
 
                 <td>
-                    {% if sortie.etat.id == 1 %}
-                        <a>Modifier</a> - <a href="{{ path('sortie_publier',{'id':sortie.id}) }} " title="Publier">Publier</a>
-                    {% else %}
-                        <a href="{{ path('sortie_details',{'id':sortie.id}) }} " title="Afficher">Afficher</a>
-                    {% endif %}
 
-                    {% if sortie.etat.id == 2 %}
+                    {% if sortie.etat.libelle == 'Créée' %}
+                    {% if sortie.organisateur.pseudo == app.user.pseudo %}
+                         <a href="{{ path('sortie_publier',{'id':sortie.id}) }} " title="Publier">Publier</a>
+                        {% endif %}
+
+                        <a href="{{ path('sortie_details',{'id':sortie.id}) }} " title="Afficher">Afficher</a>
+                   {% endif %}
+
+                    {% if sortie.etat.libelle == 'Ouverte' %}
+                        <a href="{{ path('sortie_details',{'id':sortie.id}) }} " title="Afficher">Afficher</a>
                         {% if sortie.organisateur.pseudo == app.user.pseudo %}
                             - <a href="{{ path('sortie_annuler',{'id':sortie.id}) }}"> Annuler </a>
                         {% elseif app.user in sortie.participants %}
@@ -92,7 +89,8 @@
 
                     {% endif %}
 
-                    {% if sortie.etat.id == 3 %}
+                    {% if sortie.etat.libelle == 'Clôturée' %}
+                        <a href="{{ path('sortie_details',{'id':sortie.id}) }} " title="Afficher">Afficher</a>
                         {% if sortie.organisateur.pseudo == app.user.pseudo %}
                             - <a href={{ path('sortie_annuler',{'id':sortie.id}) }}> Annuler </a>
                         {% elseif app.user in sortie.participants %}
@@ -100,19 +98,37 @@
 
                         {% endif %}
                     {% endif %}
+
+                    {% if sortie.etat.libelle == 'Activité en cours' %}
+                        <a href="{{ path('sortie_details',{'id':sortie.id}) }} " title="Afficher">Afficher</a>
+                    {% endif %}
+
+                    {% if sortie.etat.libelle == 'Passée' %}
+                    <a href="{{ path('sortie_details',{'id':sortie.id}) }} " title="Afficher">Afficher</a>
+                    {% endif %}
+
+                    {% if sortie.etat.libelle == 'Annulée' %}
+                        <a href="{{ path('sortie_details',{'id':sortie.id}) }} " title="Afficher">Afficher</a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}
     </table>
+    {% else %}
+        <br>
+    <div class="aucuneSortie">
+        <div><h2> Aucune sortie a afficher </h2> </div>
+     </div>
+        <br>
+    {% endif %}
 
-
-    <button type="button" class="btn btn-outline-primary"><a href=" {{ path('creerSortie') }}" title="Créer une sortie">Créer
-            une Sortie</a></button>
+    <a href=" {{ path('creerSortie') }}" title="Créer une sortie"><button type="button" class="btn btn-primary btn-lg">Créer une Sortie
+        </button>   </a>
 
 
     {% endblock %}
 
     {% block title %}
-
+       Accueil {{ parent() }}
     {% endblock %}
 
